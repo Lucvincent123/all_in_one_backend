@@ -1,11 +1,8 @@
 import { Pool } from 'pg';
-import path from 'path';
 
 import pool, { Table } from '../';
-import { getQueryByName } from '../../utils/sql';
 import { errorHandler } from '../../utils/error';
-
-const filePath = path.join(__dirname, 'repayment.query.sql');
+import * as queryString from './query';
 
 type Repayment = {
     id?: number;
@@ -38,7 +35,7 @@ class repaymentTable extends Table {
 
     async createTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'create_repayment_table');
+            const query = queryString.create_repayment_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error creating repayment table -', error.message);
@@ -48,7 +45,7 @@ class repaymentTable extends Table {
 
     async dropTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'drop_repayment_table');
+            const query = queryString.drop_repayment_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error dropping repayment table -', error.message);
@@ -58,7 +55,7 @@ class repaymentTable extends Table {
 
     async insertData(data: Repayment[]): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'insert_repayment_data');
+            const query = queryString.insert_repayment_data;
             for (const item of data) {
                 await this.pool.query(query, [
                     item.sender,
@@ -77,7 +74,7 @@ class repaymentTable extends Table {
 
     async getData(): Promise<Repayment[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_all_repayments');
+            const query = queryString.select_all_repayments;
             const result = await this.pool.query(query);
             return result.rows;
         } catch (error: any) {
@@ -88,7 +85,7 @@ class repaymentTable extends Table {
 
     async getDataByCircleId(circleId: number): Promise<RepaymentWithUser[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_repayments_by_circle_id');
+            const query = queryString.select_repayments_by_circle_id;
             const result = await this.pool.query(query, [circleId]);
             return result.rows;
         } catch (error: any) {

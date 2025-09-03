@@ -1,11 +1,8 @@
 import { Pool } from 'pg';
-import path from 'path';
 
 import pool, { Table } from '../';
-import { getQueryByName } from '../../utils/sql';
 import { errorHandler } from '../../utils/error';
-
-const filePath = path.join(__dirname, 'expense.query.sql');
+import * as queryString from './query';
 
 type Expense = {
     id?: number;
@@ -22,7 +19,7 @@ class ExpenseTable extends Table {
 
     async createTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'create_expense_table');
+            const query = queryString.create_expense_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error creating expense table -', error.message);
@@ -32,7 +29,7 @@ class ExpenseTable extends Table {
 
     async dropTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'drop_expense_table');
+            const query = queryString.drop_expense_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error dropping expense table -', error.message);
@@ -42,7 +39,7 @@ class ExpenseTable extends Table {
 
     async insertData(data: Expense[]): Promise<number[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'insert_expense_data');
+            const query = queryString.insert_expense_data;
             const ids: number[] = [];
             for (const item of data) {
                 const id = await this.pool.query(query, [item.circleId, item.amount, item.title, item.expense_date]);
@@ -57,7 +54,7 @@ class ExpenseTable extends Table {
 
     async getData(): Promise<Expense[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_all_expenses');
+            const query = queryString.select_all_expenses;
             const result = await this.pool.query(query);
             return result.rows;
         } catch (error: any) {
@@ -68,7 +65,7 @@ class ExpenseTable extends Table {
 
     async getDataByCircleId(circleId: number): Promise<Expense[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_all_expenses_by_circle_id');
+            const query = queryString.select_all_expenses_by_circle_id;
             const result = await this.pool.query(query, [circleId]);
             return result.rows;
         } catch (error: any) {

@@ -1,11 +1,8 @@
 import { Pool } from 'pg';
-import path from 'path';
 
 import pool, { Table } from '../';
-import { getQueryByName } from '../../utils/sql';
 import { errorHandler } from '../../utils/error';
-
-const filePath = path.join(__dirname, 'debt.query.sql');
+import * as queryString from './query';
 
 type Debt = {
     userId: number;
@@ -20,7 +17,7 @@ class DebtTable extends Table {
 
     async createTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'create_debt_table');
+            const query = queryString.create_debt_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error creating expense table -', error.message);
@@ -30,7 +27,7 @@ class DebtTable extends Table {
 
     async dropTable(): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'drop_debt_table');
+            const query = queryString.drop_debt_table;
             await this.pool.query(query);
         } catch (error: any) {
             console.error('Error dropping debt table -', error.message);
@@ -40,7 +37,7 @@ class DebtTable extends Table {
 
     async insertData(data: Debt[]): Promise<void> {
         try {
-            const query = await getQueryByName(filePath, 'insert_debt_data');
+            const query = queryString.insert_debt_data;
             for (const item of data) {
                 await this.pool.query(query, [item.userId, item.expenseId, item.amount]);
             }
@@ -52,7 +49,7 @@ class DebtTable extends Table {
 
     async getData(): Promise<Debt[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_all_debts');
+            const query = queryString.select_all_debts;
             const result = await this.pool.query(query);
             return result.rows;
         } catch (error: any) {
@@ -63,7 +60,7 @@ class DebtTable extends Table {
 
     async getDataByExpenseId(expenseId: number): Promise<Debt[] | void> {
         try {
-            const query = await getQueryByName(filePath, 'select_all_debts_by_expenseId');
+            const query = queryString.select_all_debts_by_expenseId;
             const result = await this.pool.query(query, [expenseId]);
             return result.rows;
         } catch (error: any) {
