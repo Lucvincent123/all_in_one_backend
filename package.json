@@ -4,7 +4,7 @@
     "main": "dist/server.js",
     "scripts": {
         "dev": "nodemon src/server.ts",
-        "build": "tsc",
+        "build": "tsc && cp -r src/db dist/db && rm -r dist/db/*.ts",
         "start": "node dist/server.js"
     },
     "dependencies": {
