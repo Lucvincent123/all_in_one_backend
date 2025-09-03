@@ -26,7 +26,7 @@ export abstract class Table {
 
     abstract dropTable(): Promise<void>;
 
-    abstract insertData(data: any[]): Promise<void>;
+    abstract insertData(data: any[]): Promise<void> | Promise<any>;
 
     abstract getData(): Promise<any[] | void>;
 }

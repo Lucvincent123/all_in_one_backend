@@ -47,7 +47,7 @@ class UserTable extends Table {
             }
         } catch (error: any) {
             console.error('Error inserting data into users table -', error.message);
-            errorHandler(error); 
+            errorHandler(error);
         }
     }
 
@@ -58,7 +58,7 @@ class UserTable extends Table {
             return result.rows;
         } catch (error: any) {
             console.error('Error fetching data from users table -', error.message);
-            errorHandler(error); 
+            errorHandler(error);
         }
     }
 
@@ -71,6 +71,44 @@ class UserTable extends Table {
                 : null;
         } catch (error: any) {
             console.error('Error fetching password hash by email -', error.message);
+            errorHandler(error);
+            return null;
+        }
+    }
+
+    async getIdByEmail(email: string): Promise<number | null> {
+        try {
+            const query = await getQueryByName(filePath, 'select_id_by_email');
+            const result = await this.pool.query(query, [email]);
+            return result.rows[0] ? result.rows[0].id : null;
+        } catch (error) {
+            if (error instanceof Error) {
+                console.error('Error checking email existence -', error.message);
+                errorHandler(error);
+            }
+            return null;
+        }
+    }
+
+    async updatePasswordById(password_hash: string, id: number): Promise<void> {
+        try {
+            const query = await getQueryByName(filePath, 'update_password_by_id');
+
+            await this.pool.query(query, [password_hash, id]);
+        } catch (error: any) {
+            console.error('Error updating password by ID -', error.message);
+            errorHandler(error);
+        }
+    }
+
+    async getUsernameEmailById(id: number): Promise<{ username: string; email: string } | null> {
+        try {
+            const query = await getQueryByName(filePath, 'select_username_email_by_id');
+            const result = await this.pool.query(query, [id]);
+            const firstRows = result.rows[0];
+            return firstRows ? { username: firstRows.username, email: firstRows.email } : null;
+        } catch (error: any) {
+            console.error('Error getting username and email by ID -', error.message);
             errorHandler(error);
             return null;
         }

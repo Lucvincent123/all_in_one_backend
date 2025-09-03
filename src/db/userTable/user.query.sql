@@ -19,4 +19,12 @@ SELECT * FROM users;
 -- name: select_id_password_hash_by_email
 SELECT id, password_hash FROM users WHERE email = $1;
 
+-- name: select_id_by_email
+SELECT id FROM users WHERE email = $1;
+
+-- name: update_password_by_id
+UPDATE users SET password_hash = $1 WHERE id = $2;
+
+-- name: select_username_email_by_id
+SELECT username, email FROM users WHERE id = $1;
 
