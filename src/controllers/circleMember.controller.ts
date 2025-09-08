@@ -24,6 +24,7 @@ class CircleMemberController {
         const { userId, circleId } = req.body;
         if (!userId || !circleId) {
             res.status(400).json({ success: false, message: 'UserId and circleId are required' });
+            return;
         }
         try {
             const newMember = { userId, circleId };
@@ -96,6 +97,7 @@ class CircleMemberController {
             const { amount, userId, circleId } = req.body;
             if (!amount || !userId || !circleId) {
                 res.status(400).json({ success: false, message: 'amount, userId and circleId are required' });
+                return;
             }
             await circleMemberTable.updateMemberBalance(amount, userId, circleId);
             res.status(200).json({ success: true, message: 'Member balance updated successfully' });

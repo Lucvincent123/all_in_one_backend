@@ -26,6 +26,7 @@ class CircleController {
         const { title } = req.body;
         if (!title) {
             res.status(400).json({ success: false, message: 'Title is required' });
+            return;
         }
         try {
             const newCircle = { title };

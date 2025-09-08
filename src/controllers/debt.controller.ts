@@ -25,6 +25,7 @@ class DebtController {
         const { userId, expenseId, amount } = req.body;
         if (!userId || !expenseId || !amount) {
             res.status(400).json({ success: false, message: 'userId, expenseId, amount are required' });
+            return;
         }
         try {
             const newdebt = { userId, expenseId, amount };

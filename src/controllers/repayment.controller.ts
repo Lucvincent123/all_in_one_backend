@@ -26,6 +26,7 @@ class RepaymentController {
         const { sender, receiver, circleId, amount, title } = req.body;
         if (!sender || !receiver || !circleId || !amount || !title) {
             res.status(400).json({ success: false, message: 'sender, receiver, circleId, amount, title are required' });
+            return;
         }
         try {
             await Promise.all([

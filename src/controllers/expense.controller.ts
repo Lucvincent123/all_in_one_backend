@@ -29,6 +29,7 @@ class ExpenseController {
         const { circleId, amount, title, payments, debts } = req.body;
         if (!circleId || !amount || !title) {
             res.status(400).json({ success: false, message: 'circleId, amount, title are required' });
+            return;
         }
         try {
             const newExpense = { circleId, amount, title, expense_date: new Date().toISOString() };

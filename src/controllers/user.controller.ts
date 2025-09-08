@@ -28,6 +28,7 @@ class UserController {
         const { name, email, password } = req.body;
         if (!name || !email || !password) {
             res.status(400).json({ success: false, message: 'Name, email, and password are required' });
+            return;
         }
         try {
             const password_hash = await bcrypt.hash(password, 10);
@@ -135,7 +136,10 @@ class UserController {
         try {
             const userId = req.userId;
             const user = await userTable.getUsernameEmailById(userId as number);
-            if (user == null) res.status(401).json({ success: false, message: 'Invalid token' });
+            if (user == null) {
+                res.status(401).json({ success: false, message: 'Invalid token' });
+                return;
+            }
             res.status(200).json({
                 success: true,
                 message: 'Authenticated',
